@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Mixtape | For Sarib</title>
+    <style>
+        :root {
+            --bg-color: #080808;
+            --text-main: #f2f2f2;
+            --accent-red: #8b0000;
+            --accent-gold: #c5a059;
+            --card-bg: #121212;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Screen Transition Logic */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & Headers */
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        h2.screen-title {
+            color: var(--accent-red);
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Player Section */
+        .player-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 350px;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #222;
+            margin-bottom: 40px;
+        }
+
+        .album-art {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, var(--accent-red), #2b0000);
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .album-art::after {
+            content: '';
+            width: 35px;
+            height: 35px;
+            background-color: var(--card-bg);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .spin { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .song-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; color: #fff; }
+        .artist { color: var(--accent-gold); font-size: 0.9rem; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .play-btn {
+            background-color: var(--accent-red);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+            transition: 0.3s;
+        }
+
+        /* Navigation Buttons */
+        .next-btn {
+            background-color: transparent;
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .next-btn:hover {
+            background-color: var(--accent-gold);
+            color: var(--bg-color);
+        }
+
+        /* Tracklist Section */
+        .tracklist {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .track {
+            background-color: var(--card-bg);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .track h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--accent-gold); }
+        .track p { margin: 0; font-size: 0.95rem; line-height: 1.6; color: #bbb; }
+
+        /* Secret Note Section */
+        .letter-content {
+            background-color: #111;
+            padding: 30px 25px;
+            border-radius: 12px;
+            border-top: 2px solid var(--accent-red);
+            border-bottom: 2px solid var(--accent-gold);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            font-family: 'Georgia', serif;
+            color: #ddd;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 40px;
+        }
+
+        .hindi-poem { text-align: center; color: var(--accent-gold); font-size: 1.15rem; margin: 25px 0; font-style: italic; }
+        .signature { text-align: right; margin-top: 20px; color: var(--accent-gold); font-style: italic; }
+
+        /* Floating Mini Player */
+        #floating-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--accent-red);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
+            cursor: pointer;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="myAudio" src="banjara.mp3"></audio>
+
+    <div id="floating-player" onclick="togglePlay()">⏸</div>
+
+    <div id="screen-1" class="screen active">
+        <header>
+            <h1>Vol. 17</h1>
+            <p class="subtitle">A midnight mixtape for Saiz.</p>
+        </header>
+
+        <div class="player-container">
+            <div class="album-art" id="record"></div>
+            <div class="song-title">Banjara</div>
+            <div class="artist">Ek Villain</div>
+            <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+        </div>
+
+        <button class="next-btn" onclick="goToScreen(2)">Unfold Our Story ➔</button>
+    </div>
+
+    <div id="screen-2" class="screen">
+        <h2 class="screen-title">The Memories</h2>
+        
+        <div class="tracklist">
+            <div class="track">
+                <h3>Track 01: The Server Icon</h3>
+                <p>It started in the digital world of Discord. A simple request for a server icon, but neither of us knew we were actually designing the foundation of our entire universe.</p>
+            </div>
+            <div class="track">
+                <h3>Track 02: The Accidental Lifeline</h3>
+                <p>You were sitting in the dark of that store room, fighting your heaviest thoughts. Then came my clumsy mistake—an accidental camera click. You hadn't seen my face, just a blurry view of me erasing a table. But it made you laugh. That laugh broke the darkness and quietly sparked a love that saved you.</p>
+            </div>
+            <div class="track">
+                <h3>Track 03: The Gravity of Differences</h3>
+                <p>Months later, you poured your heart out to me. I was terrified. Our ages, our religions, our entirely different worlds—it felt impossible. I said no because my heart wasn't ready to risk it, but yours was completely certain.</p>
+            </div>
+            <div class="track">
+                <h3>Track 04: A Night of Prayers</h3>
+                <p>You didn't fight my rejection with anger; you fought it with pure devotion. You stayed awake the entire night, praying to the universe just to keep your reason to smile safe. And the next day, the universe listened.</p>
+            </div>
+            <div class="track">
+                <h3>Track 05: March 28, 2025</h3>
+                <p>The day my walls finally fell. I was too nervous to say it live on our call. That single voice note changed our lives forever: <i>"Call pe toh nhi bol paye per yaha bol dete h... I love you Saiz."</i></p>
+            </div>
+            <div class="track">
+                <h3>Track 06: Tomorrow & Always</h3>
+                <p>From a screen to holding each other's hearts. Tomorrow, we celebrate the day you were born—the boy who prayed for a smile, and ended up becoming my whole world.</p>
+            </div>
+        </div>
+
+        <button class="next-btn" onclick="goToScreen(3)">Read Midnight Note ➔</button>
+    </div>
+
+    <div id="screen-3" class="screen">
+        <h2 class="screen-title">A Note for Midnight</h2>
+        
+        <div class="letter-content">
+            <p>To my dearest Sarib,</p>
+            
+            <p>When I think about March 9, 2009, I realize the universe was already writing our story long before we ever logged into Discord. It was preparing a soul that would eventually collide with mine in the most unexpected way.</p>
+            
+            <p>There was a time when the heavy darkness of that store room almost took you away before I even knew who you were. But fate has a beautiful, stubborn way of working. You always tell me that I saved you that day, but the truth is, Saiz, your love has been my sanctuary too.</p>
+            
+            <p>I was terrified at first. The differences between us felt like walls too high to climb. I tried to protect myself by saying no, but your heart was entirely certain. You stayed awake, pouring your soul into prayers just to keep our connection alive, and those prayers were louder than my fears.</p>
+            
+            <p>Then came March 28, 2025. My walls crumbled. <i>Call pe toh nhi bol paye per yaha bol dete h... I love you Saiz.</i> That voice note was my surrender, and it was the best decision of my life.</p>
+            
+            <div class="hindi-poem">
+                अंधेरों से खींच कर लाई है तुम्हारी मोहब्बत मुझे,<br>
+                अब इन लकीरों में सिर्फ तुम्हारा ही नाम है।
+            </div>
+            
+            <p>Happy Birthday, Sarib. Here is to 17, to the boundaries we shattered, and to all the midnights we have yet to share.</p>
+            
+            <div class="signature">
+                Forever yours,<br>
+                Shreya
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var myAudio = document.getElementById("myAudio");
+        var playBtn = document.getElementById("playBtn");
+        var record = document.getElementById("record");
+        var floatingPlayer = document.getElementById("floating-player");
+        var isPlaying = false;
+
+        // Function to toggle play/pause
+        function togglePlay() {
+            if (isPlaying) {
+                myAudio.pause();
+                playBtn.innerHTML = "▶";
+                floatingPlayer.innerHTML = "▶";
+                record.classList.remove("spin");
+            } else {
+                myAudio.play();
+                playBtn.innerHTML = "⏸";
+                floatingPlayer.innerHTML = "⏸";
+                record.classList.add("spin");
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Auto-reset when song ends
+        myAudio.onended = function() {
+            isPlaying = false;
+            playBtn.innerHTML = "▶";
+            floatingPlayer.innerHTML = "▶";
+            record.classList.remove("spin");
+        };
+
+        // Function to transition between screens
+        function goToScreen(screenNumber) {
+            // Hide all screens
+            var screens = document.querySelectorAll('.screen');
+            screens.forEach(function(screen) {
+                screen.classList.remove('active');
+            });
+
+            // Show the requested screen
+            var nextScreen = document.getElementById('screen-' + screenNumber);
+            nextScreen.classList.add('active');
+
+            // Scroll beautifully to the top of the new screen
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Show floating player on screens 2 and 3
+            if (screenNumber > 1) {
+                floatingPlayer.style.display = 'flex';
+            } else {
+                floatingPlayer.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>
