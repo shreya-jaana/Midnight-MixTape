@@ -28,6 +28,7 @@
             min-height: 100vh;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 40px 20px;
             box-sizing: border-box;
             opacity: 0;
@@ -37,12 +38,16 @@
         .screen.active {
             display: flex;
             opacity: 1;
-            animation: fadeIn 1s forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Pop-up Animation for Elements */
+        .pop-up {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         /* Typography & Headers */
@@ -79,10 +84,10 @@
             max-width: 350px;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.3);
             text-align: center;
             border: 1px solid #222;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .album-art {
@@ -91,7 +96,7 @@
             background: linear-gradient(135deg, var(--accent-red), #2b0000);
             border-radius: 50%;
             margin: 0 auto 20px auto;
-            box-shadow: 0 0 20px rgba(139, 0, 0, 0.4);
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -122,12 +127,12 @@
             border-radius: 50%;
             font-size: 1.2rem;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
             transition: 0.3s;
         }
 
         /* Navigation Buttons */
-        .next-btn {
+        .action-btn {
             background-color: transparent;
             color: var(--accent-gold);
             border: 1px solid var(--accent-gold);
@@ -138,150 +143,118 @@
             transition: 0.3s;
             letter-spacing: 1px;
             margin-top: 20px;
-            margin-bottom: 40px;
         }
 
-        .next-btn:hover {
-            background-color: var(--accent-gold);
-            color: var(--bg-color);
+        .action-btn:hover { background-color: var(--accent-gold); color: var(--bg-color); }
+
+        /* Memory Card (One by One effect) */
+        .memory-card {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            border-top: 4px solid var(--accent-red);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Tracklist Section */
-        .tracklist {
+        .memory-card h3 { color: var(--accent-gold); margin-bottom: 15px; font-size: 1.4rem; }
+        .memory-card p { color: #ccc; line-height: 1.7; font-size: 1.05rem; margin: 0; }
+
+        .progress-dots { margin-top: 25px; display: flex; gap: 8px; }
+        .dot { width: 10px; height: 10px; background-color: #444; border-radius: 50%; transition: 0.3s; }
+        .dot.active { background-color: var(--accent-red); transform: scale(1.2); }
+
+        /* Secret Note & Typewriter Section */
+        .letter-container {
             width: 100%;
             max-width: 500px;
-        }
-
-        .track {
-            background-color: var(--card-bg);
-            margin-bottom: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        .track h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--accent-gold); }
-        .track p { margin: 0; font-size: 0.95rem; line-height: 1.6; color: #bbb; }
-
-        /* Secret Note Section */
-        .letter-content {
             background-color: #111;
-            padding: 30px 25px;
+            padding: 35px 25px;
             border-radius: 12px;
-            border-top: 2px solid var(--accent-red);
-            border-bottom: 2px solid var(--accent-gold);
+            border-left: 2px solid var(--accent-gold);
+            border-right: 2px solid var(--accent-red);
             box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            min-height: 400px;
+        }
+
+        #typewriter-text {
             font-family: 'Georgia', serif;
             color: #ddd;
             line-height: 1.8;
             font-size: 1.05rem;
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 40px;
         }
 
-        .hindi-poem { text-align: center; color: var(--accent-gold); font-size: 1.15rem; margin: 25px 0; font-style: italic; }
-        .signature { text-align: right; margin-top: 20px; color: var(--accent-gold); font-style: italic; }
+        /* The blinking cursor */
+        .cursor { display: inline-block; width: 2px; background-color: var(--accent-gold); animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hidden-poem { opacity: 0; transition: opacity 2s ease-in; text-align: center; color: var(--accent-gold); font-size: 1.15rem; margin: 25px 0; font-style: italic; }
+        .hidden-signature { opacity: 0; transition: opacity 2s ease-in; text-align: right; color: var(--accent-gold); font-style: italic; margin-top: 20px; }
 
         /* Floating Mini Player */
         #floating-player {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--accent-red);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(139, 0, 0, 0.6);
-            cursor: pointer;
-            z-index: 100;
+            position: fixed; bottom: 20px; right: 20px; background-color: var(--accent-red);
+            width: 50px; height: 50px; border-radius: 50%; display: none;
+            align-items: center; justify-content: center; color: white; font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.6); cursor: pointer; z-index: 100;
         }
     </style>
 </head>
 <body>
 
     <audio id="myAudio" src="banjara.mp3"></audio>
-
     <div id="floating-player" onclick="togglePlay()">⏸</div>
 
     <div id="screen-1" class="screen active">
-        <header>
+        <header class="pop-up">
             <h1>Vol. 17</h1>
             <p class="subtitle">A midnight mixtape for Saiz.</p>
         </header>
 
-        <div class="player-container">
+        <div class="player-container pop-up" style="animation-delay: 0.2s;">
             <div class="album-art" id="record"></div>
             <div class="song-title">Banjara</div>
             <div class="artist">Ek Villain</div>
             <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
         </div>
 
-        <button class="next-btn" onclick="goToScreen(2)">Unfold Our Story ➔</button>
+        <button class="action-btn pop-up" style="animation-delay: 0.4s;" onclick="goToScreen(2); renderTrack();">Unfold Our Story ➔</button>
     </div>
 
     <div id="screen-2" class="screen">
-        <h2 class="screen-title">The Memories</h2>
+        <h2 class="screen-title pop-up">The Memories</h2>
         
-        <div class="tracklist">
-            <div class="track">
-                <h3>Track 01: The Server Icon</h3>
-                <p>It started in the digital world of Discord. A simple request for a server icon, but neither of us knew we were actually designing the foundation of our entire universe.</p>
-            </div>
-            <div class="track">
-                <h3>Track 02: The Accidental Lifeline</h3>
-                <p>You were sitting in the dark of that store room, fighting your heaviest thoughts. Then came my clumsy mistake—an accidental camera click. You hadn't seen my face, just a blurry view of me erasing a table. But it made you laugh. That laugh broke the darkness and quietly sparked a love that saved you.</p>
-            </div>
-            <div class="track">
-                <h3>Track 03: The Gravity of Differences</h3>
-                <p>Months later, you poured your heart out to me. I was terrified. Our ages, our religions, our entirely different worlds—it felt impossible. I said no because my heart wasn't ready to risk it, but yours was completely certain.</p>
-            </div>
-            <div class="track">
-                <h3>Track 04: A Night of Prayers</h3>
-                <p>You didn't fight my rejection with anger; you fought it with pure devotion. You stayed awake the entire night, praying to the universe just to keep your reason to smile safe. And the next day, the universe listened.</p>
-            </div>
-            <div class="track">
-                <h3>Track 05: March 28, 2025</h3>
-                <p>The day my walls finally fell. I was too nervous to say it live on our call. That single voice note changed our lives forever: <i>"Call pe toh nhi bol paye per yaha bol dete h... I love you Saiz."</i></p>
-            </div>
-            <div class="track">
-                <h3>Track 06: Tomorrow & Always</h3>
-                <p>From a screen to holding each other's hearts. Tomorrow, we celebrate the day you were born—the boy who prayed for a smile, and ended up becoming my whole world.</p>
-            </div>
+        <div class="memory-card" id="memoryCard">
+            <h3 id="trackTitle"></h3>
+            <p id="trackText"></p>
         </div>
+        
+        <div class="progress-dots" id="dotsContainer"></div>
 
-        <button class="next-btn" onclick="goToScreen(3)">Read Midnight Note ➔</button>
+        <button class="action-btn" id="nextTrackBtn" onclick="nextTrack()">Next Memory ➔</button>
     </div>
 
     <div id="screen-3" class="screen">
-        <h2 class="screen-title">A Note for Midnight</h2>
+        <h2 class="screen-title pop-up">A Note for Midnight</h2>
         
-        <div class="letter-content">
-            <p>To my dearest Sarib,</p>
+        <div class="letter-container pop-up" style="animation-delay: 0.3s;">
+            <div id="typewriter-text"></div><span class="cursor" id="cursor">&nbsp;</span>
             
-            <p>When I think about March 9, 2009, I realize the universe was already writing our story long before we ever logged into Discord. It was preparing a soul that would eventually collide with mine in the most unexpected way.</p>
-            
-            <p>There was a time when the heavy darkness of that store room almost took you away before I even knew who you were. But fate has a beautiful, stubborn way of working. You always tell me that I saved you that day, but the truth is, Saiz, your love has been my sanctuary too.</p>
-            
-            <p>I was terrified at first. The differences between us felt like walls too high to climb. I tried to protect myself by saying no, but your heart was entirely certain. You stayed awake, pouring your soul into prayers just to keep our connection alive, and those prayers were louder than my fears.</p>
-            
-            <p>Then came March 28, 2025. My walls crumbled. <i>Call pe toh nhi bol paye per yaha bol dete h... I love you Saiz.</i> That voice note was my surrender, and it was the best decision of my life.</p>
-            
-            <div class="hindi-poem">
+            <div class="hidden-poem" id="poem">
                 अंधेरों से खींच कर लाई है तुम्हारी मोहब्बत मुझे,<br>
                 अब इन लकीरों में सिर्फ तुम्हारा ही नाम है।
             </div>
             
-            <p>Happy Birthday, Sarib. Here is to 17, to the boundaries we shattered, and to all the midnights we have yet to share.</p>
-            
-            <div class="signature">
-                Forever yours,<br>
-                Shreya
+            <div class="hidden-signature" id="signature">
+                Happy 17th Birthday, Sarib.<br>
+                Forever yours,<br>Shreya
             </div>
         </div>
     </div>
@@ -293,53 +266,102 @@
         var floatingPlayer = document.getElementById("floating-player");
         var isPlaying = false;
 
-        // Function to toggle play/pause
         function togglePlay() {
             if (isPlaying) {
-                myAudio.pause();
-                playBtn.innerHTML = "▶";
-                floatingPlayer.innerHTML = "▶";
-                record.classList.remove("spin");
+                myAudio.pause(); playBtn.innerHTML = "▶"; floatingPlayer.innerHTML = "▶"; record.classList.remove("spin");
             } else {
-                myAudio.play();
-                playBtn.innerHTML = "⏸";
-                floatingPlayer.innerHTML = "⏸";
-                record.classList.add("spin");
+                myAudio.play(); playBtn.innerHTML = "⏸"; floatingPlayer.innerHTML = "⏸"; record.classList.add("spin");
             }
             isPlaying = !isPlaying;
         }
 
-        // Auto-reset when song ends
-        myAudio.onended = function() {
-            isPlaying = false;
-            playBtn.innerHTML = "▶";
-            floatingPlayer.innerHTML = "▶";
-            record.classList.remove("spin");
-        };
-
-        // Function to transition between screens
         function goToScreen(screenNumber) {
-            // Hide all screens
-            var screens = document.querySelectorAll('.screen');
-            screens.forEach(function(screen) {
-                screen.classList.remove('active');
-            });
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + screenNumber).classList.add('active');
+            floatingPlayer.style.display = screenNumber > 1 ? 'flex' : 'none';
+        }
 
-            // Show the requested screen
-            var nextScreen = document.getElementById('screen-' + screenNumber);
-            nextScreen.classList.add('active');
+        /* --- ONE BY ONE TRACKLIST LOGIC --- */
+        const tracks = [
+            { title: "Track 01: The Server Icon", text: "It started in the digital world of Discord. A simple request for a server icon, but neither of us knew we were actually designing the foundation of our entire universe." },
+            { title: "Track 02: The Accidental Lifeline", text: "You were sitting in the dark of that store room, fighting your heaviest thoughts. Then came my clumsy mistake—an accidental camera click erasing a table. That laugh broke the darkness and quietly sparked a love that saved you." },
+            { title: "Track 03: The Gravity of Differences", text: "Months later, you poured your heart out to me. I was terrified. Our ages, our religions, our entirely different worlds—it felt impossible. I said no because I was scared, but you were completely certain." },
+            { title: "Track 04: A Night of Prayers", text: "You didn't fight my rejection with anger; you fought it with pure devotion. You stayed awake the entire night, praying to the universe just to keep your reason to smile safe." },
+            { title: "Track 05: March 28, 2025", text: "The day my walls finally fell. I couldn't say it live on call. That single voice note changed everything: 'Call pe toh nhi bol paye per yaha bol dete h... I love you Saiz.'" },
+            { title: "Track 06: Tomorrow & Always", text: "From a screen to holding each other's hearts. Tomorrow, we celebrate the day you were born—the boy who prayed for a smile, and ended up becoming my whole world." }
+        ];
 
-            // Scroll beautifully to the top of the new screen
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        let currentTrack = 0;
+        const memoryCard = document.getElementById("memoryCard");
 
-            // Show floating player on screens 2 and 3
-            if (screenNumber > 1) {
-                floatingPlayer.style.display = 'flex';
+        function renderTrack() {
+            // Remove animation class to reset it
+            memoryCard.classList.remove("pop-up");
+            void memoryCard.offsetWidth; // Trigger reflow
+            
+            // Update content
+            document.getElementById("trackTitle").innerText = tracks[currentTrack].title;
+            document.getElementById("trackText").innerText = tracks[currentTrack].text;
+            
+            // Add animation back
+            memoryCard.classList.add("pop-up");
+
+            // Update progress dots
+            let dotsHTML = '';
+            for(let i=0; i<tracks.length; i++) {
+                dotsHTML += `<div class="dot ${i === currentTrack ? 'active' : ''}"></div>`;
+            }
+            document.getElementById("dotsContainer").innerHTML = dotsHTML;
+
+            // Change button text on the last track
+            if(currentTrack === tracks.length - 1) {
+                document.getElementById("nextTrackBtn").innerText = "Read Midnight Note ➔";
+            }
+        }
+
+        function nextTrack() {
+            if (currentTrack < tracks.length - 1) {
+                currentTrack++;
+                renderTrack();
             } else {
-                floatingPlayer.style.display = 'none';
+                goToScreen(3);
+                setTimeout(startTypewriter, 800); // Start typing slightly after screen transition
+            }
+        }
+
+        /* --- TYPEWRITER LOGIC --- */
+        const letterText = "To my dearest Sarib,<br><br>When I think about March 9, 2009, I realize the universe was already writing our story. Fate has a stubborn way of working. You always tell me that I saved you that day in the store room, but the truth is, your love has been my sanctuary too.<br><br>You stayed awake, pouring your soul into prayers just to keep our connection alive. And those prayers were so much louder than my fears.<br><br>That voice note was my surrender, and it was the best decision of my life.<br><br>";
+        
+        let charIndex = 0;
+        let isTyping = false;
+
+        function startTypewriter() {
+            if (isTyping) return;
+            isTyping = true;
+            document.getElementById("typewriter-text").innerHTML = "";
+            typeChar();
+        }
+
+        function typeChar() {
+            if (charIndex < letterText.length) {
+                // Handle <br> tags properly so they don't print as text
+                if (letterText.substring(charIndex, charIndex + 4) === "<br>") {
+                    document.getElementById("typewriter-text").innerHTML += "<br>";
+                    charIndex += 4;
+                } else {
+                    document.getElementById("typewriter-text").innerHTML += letterText.charAt(charIndex);
+                    charIndex++;
+                }
+                
+                // Randomize typing speed slightly for realism (30ms to 70ms)
+                setTimeout(typeChar, Math.random() * 40 + 30);
+            } else {
+                // When done typing, fade in the poem and signature
+                document.getElementById("cursor").style.display = "none";
+                document.getElementById("poem").style.opacity = "1";
+                document.getElementById("signature").style.opacity = "1";
             }
         }
     </script>
-
 </body>
 </html>
